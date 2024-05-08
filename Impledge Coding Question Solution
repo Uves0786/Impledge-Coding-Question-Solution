@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    cin.ignore(); 
+
+    vector<string> str(n);
+    for(int i = 0; i < n; i++) {
+        getline(cin, str[i]);
+    }
+
+    sort(str.begin(), str.end(), [](const string& a, const string& b) {
+        return a.length() < b.length();
+    });
+
+    unordered_map<string, int> map;
+    for(const string& s : str) {
+        map[s]++;
+    }
+
+    int count = 0;
+    for(int i = n - 1; i >= 0; i--) {
+        string sb;
+        int c = 0;
+        for(int j = str[i].length() - 1; j >= 0; j--) {
+            sb += str[i][j];
+            reverse(sb.begin(), sb.end());
+            if(map.find(sb) != map.end()) {
+                if(sb == str[i]) {
+                    continue;
+                }
+                sb.clear();
+                c = 0;
+            } else {
+                reverse(sb.begin(), sb.end());
+                c++;
+            }
+        }
+        if(c == 0) {
+            count++;
+            if(count == 1) {
+                cout << "Longest Compound Word: " << str[i] << endl;
+            } else if(count == 2) {
+                cout << "Second Longest Compound Word: " << str[i] << endl;
+            }
+        }
+        cout << endl;
+        if(count == 2) {
+            break;
+        }
+    }
+
+    return 0;
+}
